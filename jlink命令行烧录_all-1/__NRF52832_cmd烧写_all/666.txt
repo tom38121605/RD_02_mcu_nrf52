@@ -1,0 +1,12 @@
+
+
+3> cc1: fatal error: opening output file F:/_Awork_all/_Awork52_UWB_audio/DW3_QM33_DK_0.1.1/Software/DW3_QM33_SDK/Sources/nRF52840DK-DW3_QM33_SDK-FreeRTOS_DW3_QM33_SDK_0_1_1/nRF52840DK-DW3_QM33_SDK-FreeRTOS/Projects/DW3_QM33_SDK/FreeRTOS/nRF52840DK/ses/Output/nRF52840DK-DW3_QM33_SDK_UCI-FreeRTOS Common/Obj/Startup/thumb_crt0_PP.s: No such file or directory
+
+ 
+4> cc1: fatal error: cannot open 'F:/_Awork_all/_Awork52_UWB_audio/DW3_QM33_DK_0.1.1/Software/DW3_QM33_SDK/Sources/nRF52840DK-DW3_QM33_SDK-FreeRTOS_DW3_QM33_SDK_0_1_1/nRF52840DK-DW3_QM33_SDK-FreeRTOS/Projects/DW3_QM33_SDK/FreeRTOS/nRF52840DK/ses/Output/nRF52840DK-DW3_QM33_SDK_UCI-FreeRTOS Common/Obj/DW3_QM33_SDK-FreeRTOS-Common/main.asm' for writing: No such file or directory
+  
+2> cc1: fatal error: opening output file F:/_Awork_all/_Awork52_UWB_audio/DW3_QM33_DK_0.1.1/Software/DW3_QM33_SDK/Sources/nRF52840DK-DW3_QM33_SDK-FreeRTOS_DW3_QM33_SDK_0_1_1/nRF52840DK-DW3_QM33_SDK-FreeRTOS/Projects/DW3_QM33_SDK/FreeRTOS/nRF52840DK/ses/Output/nRF52840DK-DW3_QM33_SDK_UCI-FreeRTOS Common/Obj/Startup/ses_startup_nrf_common_PP.s: No such file or directory
+  
+1> cc1: fatal error: opening output file F:/_Awork_all/_Awork52_UWB_audio/DW3_QM33_DK_0.1.1/Software/DW3_QM33_SDK/Sources/nRF52840DK-DW3_QM33_SDK-FreeRTOS_DW3_QM33_SDK_0_1_1/nRF52840DK-DW3_QM33_SDK-FreeRTOS/Projects/DW3_QM33_SDK/FreeRTOS/nRF52840DK/ses/Output/nRF52840DK-DW3_QM33_SDK_UCI-FreeRTOS Common/Obj/Startup/ses_startup_nrf52840_PP.s: No such file or directory
+  
+

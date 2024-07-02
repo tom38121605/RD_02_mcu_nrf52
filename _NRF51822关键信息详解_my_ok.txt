@@ -1,0 +1,72 @@
+
+
+
+
+
+2.4 GHz 无线收发器
+
+低功耗模式下灵敏度： -93 dBm
+
+数据传输速率： 250 kbps, 1 Mbps, 2 Mbps
+
+TX Power -20 to +4 dBm in 4 dB steps
+
+省电模式下发射功率： -30 dBm
+
+峰值电流，接收时：13 mA, 发射时(0 dBm)： 10.5 mA
+
+RSSI (分辨率： 1 dB) #接收信号的强度指示
+
+ARM? Cortex?-M0 32 bit processor
+
+275 μA/MHz running from flash memory
+
+150 μA/MHz running from RAM
+
+Serial Wire Debug (SWD)
+
+现成的软件包： S100 系列
+
+存储
+
+内置Flash：256 kB /128 kB
+
+16 kB RAM
+
+支持非并行多协议运行
+
+兼容 nRF24L 系列
+
+灵活的电源管理
+
+工作电压： 1.8 V - 3.6 V
+
+使用 16 MHz RC： 2.5 μs 唤醒
+
+关闭模式： 0.4 μA @ 3 V
+
+关闭模式且保留一个区域 RAM：0.5 μA @ 3 V
+
+运行模式，所有模块空闲： 2.3 μA @ 3 V
+
+8/9/10 bit ADC - 8 个可配置通道
+
+31 个通用 I/O
+
+一个32位和两个16位带计数模式的定时器
+
+SPI 主端
+
+2线主端 (兼容I2C)
+
+UART (CTS/RTS)
+
+与 CPU 相互独立的可编程外设总线 (PPI)
+
+正交解码 (QDEC)
+
+AES 硬件加密
+
+实时计数器 (RTC)
+
+封装类型

@@ -1,0 +1,108 @@
+Run "program.bat COM# firmware.zip"
+
+说明： nrfprog可通过 mbr和bootloader升级zip文件
+
+
+==============ommo==bat文件=====================
+
+set NRFJPROG_ROOT="C:\Program Files\Nordic Semiconductor\nrf-command-line-tools\bin"     //设置 NRFJPROG_ROOT 路径
+set CLOCKSPEED=1000                                                                                                           //设置 CLOCKSPEED 速度
+
+set 文件路径 = "C:\workspace\ommo_nrf\nRF5_SDK_17.1.0_ddde560\components\softdevice\mbr\hex"
+
+REM echo off
+
+
+%NRFJPROG_ROOT%\nrfjprog --recover --family NRF52 --clockspeed %CLOCKSPEED%      //解锁读保护
+if %errorlevel% neq 0 goto FAIL
+
+%NRFJPROG_ROOT%\nrfjprog --eraseall --family NRF52 --clockspeed %CLOCKSPEED%    //擦除
+if %errorlevel% neq 0 goto FAIL
+
+%NRFJPROG_ROOT%\nrfjprog --program   %文件路径%\mbr_nrf52_2.4.1_mbr.hex --family NRF52 --clockspeed %CLOCKSPEED%    //下载mbr文件
+if %errorlevel% neq 0 goto FAIL
+
+%NRFJPROG_ROOT%\nrfjprog --program %1 --family NRF52 --clockspeed %CLOCKSPEED%      //烧写自己的hex文件 （或zip文件）
+if %errorlevel% neq 0 goto FAIL
+
+%NRFJPROG_ROOT%\nrfjprog --rbp ALL --family NRF52 --log --clockspeed %CLOCKSPEED%           //开启读保护
+if %errorlevel% neq 0 goto FAIL
+
+%NRFJPROG_ROOT%\nrfjprog --debugreset --family NRF52 --log --clockspeed %CLOCKSPEED%    
+if %errorlevel% neq 0 goto FAIL
+
+echo SUCCESS
+exit /b 0
+
+:FAIL
+echo An ERROR occoured!
+exit /b %errorlevel%
+
+
+
+============================
+
+
+1. 擦写mcu
+nrfjprog.exe -f NRF52 -e
+
+2. 复位mcu
+nrfjprog.exe --reset
+
+3. 擦写并烧录hex 文件
+nrfjprog.exe -f nRF52 --program prj.hex --chiperase
+
+4. 读写flash指定位置的数据
+   nrfjprog.exe --memrd addr --w 8 --n 100
+
+   nrfjprog --memrd 0x08C78790 [-f nRF52] [--n 4]
+   nrfjprog --memwr 0x08C78790 [-f nRF52] --val 0x11
+
+–w 是width的缩写，取值可以是8、16、32，默认是32。表示以byte、半字、字的形式打印
+–n 表示打印连续多少个bytes，默认是1byte。
+
+5. 重启芯片
+    nrfjprog --reset [-f nRF52]
+
+
+======================
+
+11.  开启读保护
+      nrfjprog --rbp all   
+
+12.  解锁读保护 
+      nrfjprog -f NRF52 --recover     
+
+13.  下载并验证
+       nrfjprog -f NRF52 --program xxx.hex --verify
+
+
+14.  echo Wscript.sleep 30000 >y12312.vbs   //用vbs脚本的方法， 精确延时 30000ms  //生成延时文件y12312.vbs
+      call y12312.vbs &del y12312.vbs             //调用延时文件，然后擦除延时文件
+
+
+
+========UNKNOWN参数============== 
+
+     nrfjprog--program <hex_path> [-f UNKNOWN]
+    UNKNOWN参数可以自动适配nRF51、nRF52和nRF52840各种芯片，而无需手动指定。
+
+    nrfjprog v9.5以后的版本，在nrfjprog.ini中指定默认的芯片类型为UNKNOWN，所以命令行中可以省略–family UNKNOWN参数。
+
+
+========连续执行===&==&&=========
+
+  nrfjprog --e && nrfjprog --program <hex path> && nrfjprog --reset
+  使用&&或&可以依次执行多个命令。
+
+
+
+======== 升级传输固件 ========
+
+nrfutil dfu serial -pkg SDK_app_s132.zip -p COM29 -fc 1-b 115200
+
+
+
+
+
+

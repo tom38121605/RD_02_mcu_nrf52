@@ -1,0 +1,24 @@
+
+
+
+
+https://www.nordicsemi.com/Software-and-Tools/Development-Tools/nRF-Command-Line-Tools/Download#infotabs
+
+nRF5x command line tools包括Jlink驱动以及Nordic自己开发的一些命令行工具，具体包括Jlink驱动，nrfjprog，nrfutil以及mergehex等。
+
+
+SDK下载链接为：https://www.nordicsemi.com/Software-and-Tools/Software/nRF5-SDK/Download#infotabs
+
+nRF MDK下载链接为：https://www.nordicsemi.com/Software-and-Tools/Development-Tools/nRF-MDK/Download#infotabs，选择你的IDE和平台（Keil5选择pack哦，BSD license和Nordic license二选其一即可，SDK17推荐使用BSD license，SDK16推荐使用Nordic license）以及相应的版本（版本选择说明请见后文）
+
+
+nrfutil有两个不兼容的版本：传统版（版本号0.5.2）和现代版（版本号大于1.5.0）。
+
+现代版nrfutil支持的功能比较多，包括生成DFU用的zip包，生成settings page，生成密钥，执行DFU操作等，SDK12.0之后都必须使用现代版nrfutil。现代版nrfutil又包括很多版本，有些老版本的现代版nrfutil跟最新的SDK也是不兼容的，所以务必参考SDK中BootLoader例程的说明文档，选择正确版本的nrfutil。现代版nrfutil是通过Python来安装和使用的，安装命令：pip install nrfutil（MacOS安装命令为：pip install --ignore-installed six nrfutil）。另外Windows系统安装过程中有可能会缺少MSVC，请下载 Visual Studio 2013 或者Visual Studio 2015
+
+
+
+
+
+
+
