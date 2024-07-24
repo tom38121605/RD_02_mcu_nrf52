@@ -1,0 +1,132 @@
+
+
+1. 下载urfutil
+     https://www.nordicsemi.com/Products/Development-tools/nrf-util
+
+2. 在C盘下创建目录nordic_tools，并将nrfutil复制到刚创建的目录下
+
+
+2. 打开powershall窗口，并输入nrfutil search后回车
+   在用户的环境变量path下， 添加C:\nordic_tools,并移到最顶部
+
+ 3. 打开powershall窗口，并输入nrfutil search后回车，显示列表
+        ble-sniffer
+        completion
+        device
+        nrf5sdk-tools
+        toolchain-manager 
+        install trace 
+
+4. 分别安装ble-sniffer,completion,device,nrf5sdk-tools,toolchain-manager,trace等工具
+     输入nrfutil install ble-sniffer回车进行安装
+    输入nrfutil install completion回车进行安装
+    输入nrfutil install device回车进行安装
+    输入nrfutil install nrf5sdk-tools回车进行安装
+    输入nrfutil install toolchain-manager回车进行安装
+    输入nrfutil install trace回车进行安装
+
+5. 输入nrfutil completion install powershell ，回车， 出现下面的一段文字，在这段文字下面要使用
+   
+# From nrfutil completion install
+# WARNING: nrfutil tab-completion may become slow because of Windows Defender
+if ( Test-Path -Path ${env:USERPROFILE}\.nrfutil\share\nrfutil-completion\scripts\powershell\setup.ps1 ) {
+    . ${env:USERPROFILE}\.nrfutil\share\nrfutil-completion\scripts\powershell\setup.ps1
+}
+
+
+6. 输入 echo $profile
+， 出现下面的协议目录文件，如果没有这个文件，则建立一个同样的文件，把上面的文字加入到这个文件里
+
+    C:\Users\HP\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
+
+ 
+6. 使用 nrfutil 生成 ZIP 文件的例子1：   （这个例子没有成功）
+
+    假设您有一个名为 aa.hex 的文件，想要生成一个名为 aa.zip 的 ZIP 包
+
+   nrfutil pkg generate --sd-req 0x100  --application  aa.hex  aa.zip
+
+   这里的参数解释如下：
+
+   --sd-req 0x100：指定固件 的版本要求，这里的 0x100是示例，实际值根据您的固件 版本而定。  //待验证
+
+   --application softdevice.hex：指定输入的hex 文件。
+
+   softdevice_update.zip：输出的 ZIP 文件名。
+
+
+6.  使用 nrfutil 生成 ZIP 文件的例子1：   （这个例子successful成功）
+
+    nrfutil pkg generate --application aa.hex --application-version 2 --hw-version 52 --sd-req 0x0100   aa.zip
+
+
+6. 带密钥的例子3：   （待测试）
+
+    nrfutil pkg generate --application aa.hex --application-version 2 --hw-version 52 --sd-req 0x0100 --key-file priv.pem aa.zip
+
+
+
+
+===================参考===useful=================================
+
+https://www.cnblogs.com/TorryLong/p/16120902.html
+
+私钥生成命令：nrfutil keys generate priv.pem （priv.pem就是私钥）
+公钥生成命令：nrfutil keys display --key pk --format code priv.pem --out_file dfu_public_key.c （dfu_public_key.c就是公钥）
+大家务必要保存好私钥priv.pem，以后每次升级新固件时，都会通过这个私钥对它进行签名，一旦priv.pem丢失或者被暴露，DFU将无法进行或者变得不安全
+
+52810的升级命令
+nrfutil settings generate --family NRF52810 --application app10.hex --application-version 1 --bootloader-version 1 --bl-settings-version 2 settings10.hex
+mergehex.exe --merge bootloader10.hex settings10.hex --output b1_temp10.hex
+mergehex.exe --merge b1_temp10.hex app10.hex s112_nrf52_6.1.1_softdevice.hex --output whole10.hex
+
+nrfjprog --eraseall -f NRF52810
+nrfjprog --program whole.hex --verify -f NRF52810
+nrfjprog --reset -f NRF52810
+
+nrfutil pkg generate --application app_new.hex --application-version 2 --hw-version 52 --sd-req 0xB8 --key-file priv.pem SDK153_app_s112.zip
+
+nrfutil pkg generate --help 查看ID
+
+52832的升级命令
+nrfutil pkg generate --application app32_new.hex --application-version 3 --hw-version 52 --sd-req 0xB7 --key-file priv.pem SDK153_app_s132.zip
+
+nrfutil settings generate --family NRF52 --application app32_new.hex --application-version 0 --bootloader-version 0 --bl-settings-version 2 settings.hex
+mergehex.exe --merge bootloader32.hex settings.hex --output b1_temp.hex
+mergehex.exe --merge b1_temp.hex app32_new.hex s132_nrf52_6.1.1_softdevice.hex --output whole32.hex
+
+
+nrfjprog --eraseall -f NRF52
+nrfjprog --program whole.hex --verify -f NRF52
+nrfjprog --reset -f NRF52
+
+ 
+
+
+1. generate private key nrfutil keys generate priv.pem
+
+2. generate dfu_public_key.c nrfutil keys display --key pk --format code priv.pem --out_file dfu_public_key.c
+
+3. put dfu_public_key.c to the folder nRF5_SDK_15.3.0_59ac345\examples\dfu
+
+4. compile bootloader
+
+5. prepare bootloader setting page (the application version and the CRC, overwrite the default bootloader setting )
+nrfutil settings generate --family NRF52810 --application app10.hex --application-version 0 --bootloader-version 0 --bl-settings-version 2 bootloader_setting.hex
+
+6. mergehex softdevice, bootloader, bootloader setting page.
+mergehex -m s112_nrf52_6.1.1_softdevice.hex bootloader_setting.hex bootloader10.hex -o sd_set_boot.hex
+
+7. merge mergehex softdevice, bootloader, bootloader setting page and app to whole
+mergehex -m sd_set_boot.hex app10.hex -o bat_whole.hex
+
+8. erase device and flash bat_whole.hex to device( including softdevice, bootloader, bootloader setting page and app )
+nrfjprog.exe --eraseall -f NRF52nrfjprog.exe --program bat_whole.hex --verify -f NRF52
+
+9. generate dfu package
+nrfutil.exe pkg generate --application bat_app.hex --application-version 1 --hw-version 52 --sd-req 0xB8 --key-file priv.pem bat_app_dfu_pge.zip
+
+10.connect device with PC or mobile app------do DFU for the detail https://devzone.nordicsemi.com/nordic/nordic-blog/b/blog/posts/getting-started-with-nordics-secure-dfu-bootloader
+
+经验再多也只能看作加法，而经过理论升华的经验，就可以看作乘法！
+上一篇： 使用python制作nRF52832升级包和合成烧录文件的经验（nRF52832 DFU经验分享）
