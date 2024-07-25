@@ -1,4 +1,5 @@
 
+powershall打开dos窗口  （直接用cmd更方便）
 
 1. 下载urfutil
      https://www.nordicsemi.com/Products/Development-tools/nrf-util
@@ -6,7 +7,7 @@
 2. 在C盘下创建目录nordic_tools，并将nrfutil复制到刚创建的目录下
 
 
-2. 打开powershall窗口，并输入nrfutil search后回车
+2. 打开powershall窗口（cmd也可以），并输入nrfutil search后回车
    在用户的环境变量path下， 添加C:\nordic_tools,并移到最顶部
 
  3. 打开powershall窗口，并输入nrfutil search后回车，显示列表
