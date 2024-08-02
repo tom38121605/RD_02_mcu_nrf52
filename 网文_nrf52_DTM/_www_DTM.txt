@@ -1,0 +1,23 @@
+
+1.  关于nrf52 DTM  //frm company
+https://infocenter.nordicsemi.com/index.jsp?topic=%2Fsdk_nrf5_v17.0.2%2Fble_sdk_app_dtm_serial.html
+
+看 Software Development Kit > Previous versions of nRF5 SDK > nRF5 SDK v17.0.2 > Examples > Direct Test Mode   //例子说明
+
+2. nrf connect for desktop 下载
+https://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-desktop/Download?lang=en#infotabshttps://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-desktop/Download?lang=en#infotabs
+
+下载安装完成后，打开运行nRF Connect for Desktop，点击“Direct Test Mode”前的update，安装Direct Test Mode插件。
+
+3. dtm视频
+https://www.bilibili.com/video/BV1FT411k7nF/
+
+
+
+
+
+
+
+
+
+
