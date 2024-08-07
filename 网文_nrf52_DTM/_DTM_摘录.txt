@@ -1,0 +1,126 @@
+
+说明： PC的Direct test mode软件， 设置的波特率或是19200   （已验证）
+
+00 00 82 0B 01 00 03 00 02 04 92 8C    //16 channel
+00 00 82 0B 01 00 03 00 02 04 91 8C    //15 channel
+00 00 88 0B 01 00 03 00 02 04 91 8C    //35 bytes
+00 00 88 0B 01 00 03 00 02 04 91 78    //30 bytes
+
+00 00 82 0B 01 00 03 00 02 04 92 8C   //PRBS9
+00 00 82 0B 01 00 03 00 02 04 92 8D   //11110000
+
+00 00 82 0B 01 00 03 00 02 04 92 8C    //1M
+00 00 82 0B 01 00 03 00 02 08 92 8C    //2M
+
+
+==========================PC=====Receiver==收发数据===========================
+
+参数：  single，16通道 ， LE 1Mbps，  No timeout
+
+start test：  00 00 82 0B 01 00 03 00 02 04 52 8C 
+返回：  00 00 00 00 00 00 00 00 00 00 00 00 
+
+end test:    C0 00 
+返回：   80 00 
+
+
+==========================PC=====Transmitter==收发数据===========================
+
+参数： single，16通道， 2db， LE 1Mbps， PRVS9, 35Bytes, No timeout
+
+start test： 00 00 82 0B 01 00 03 00 02 04 92 8C 
+返回：  00 00 00 00 00 00 00 00 00 00 00 00 
+
+end test:  C0 00 
+返回：  80 00 
+
+
+----------------------------详细讲解-------------------------------------------------
+
+start test： 00 00 82 0B 01 00 03 00 02 04 92 8C 
+
+00 00     //setup，重置，数据高2位为00                                                          //同core手册 
+82 0B     //tx， 2db， 0B--？                                                                        //跟core手册不一样
+
+01 00     //setup， 设置数据高2位为后面parameter字节的bit3-2位，也是00                          //同core手册 
+03 00     //setup，接收机假设发射器具有standard调整指数                                                 //同core手册 
+02 04     //setup，LE 1M                                                                                                //同core手册 
+92 8C     //tx， 频率：2402 + 18*2 =2438 对应16通道， 长度： 35字节， type： PRBS9         //同core手册 
+
+返回：  
+
+00 00    //返回status， successfull          //同core手册 
+00 00    //返回status， successfull          //同core手册 
+00 00    //返回status， successfull          //同core手册 
+00 00    //返回status， successfull          //同core手册 
+00 00    //返回status， successfull          //同core手册 
+00 00    //返回status， successfull          //同core手册 
+
+
+end test:  
+
+C0 00      //end，默认end command          //同core手册 
+
+返回：  
+
+80 00      //返回report，收到的数据包为0          //同core手册 
+
+
+
+
+
+
+
+
+
+===================================================================
+
+C:\workspace-test\ommo_nrf\nRF5_SDK_17.1.0_ddde560\components\boards\pca10112.h
+
+说明： 主要摘录于下面的direct_test_mode例子
+
+\examples\dtm\direct_test_mode
+\components\ble\ble_dtm
+
+
+arm_startup_nrf52.s 
+system_nrf52.c
+
+dtm_init
+main.c 
+
+DTM - Direct Test Mode -- dtm_cmd 
+     TEST SETUP (called RESET in Bluetooth 4.0)
+     RECEIVER_TEST
+    TRANSMITTER_TEST
+    TEST_END 
+
+polled dtm_event_get 
+    PACKET_REPORTING_EVENT    
+    TEST_STATUS_EVENT [SUCCESS|FAIL]
+
+\examples\bsp\board.h    //pin 8 for RX and pin 6 for TX
+
+uart_init()
+          RX_PIN_NUMBER,   //p0.8 
+          TX_PIN_NUMBER,   //p0.6
+
+
+#define RX_PIN_NUMBER  NRF_GPIO_PIN_MAP(0,8)
+#define TX_PIN_NUMBER  NRF_GPIO_PIN_MAP(0,6)
+#define CTS_PIN_NUMBER NRF_GPIO_PIN_MAP(0,7)
+#define RTS_PIN_NUMBER NRF_GPIO_PIN_MAP(0,5)
+#define HWFC           true
+
+#define NRF21540_RXEN_PIN   NRF_GPIO_PIN_MAP(0,19)
+#define NRF21540_TXEN_PIN   NRF_GPIO_PIN_MAP(0,22)
+#define NRF21540_PDN_PIN    NRF_GPIO_PIN_MAP(0,23)
+#define NRF21540_MODE_PIN   NRF_GPIO_PIN_MAP(0,17)
+#define NRF21540_ANTSEL_PIN NRF_GPIO_PIN_MAP(0,20)
+#define NRF21540_CS_PIN     NRF_GPIO_PIN_MAP(0,21)
+#define NRF21540_MOSI_PIN   NRF_GPIO_PIN_MAP(1,13)
+#define NRF21540_MISO_PIN   NRF_GPIO_PIN_MAP(1,14)
+#define NRF21540_CLK_PIN    NRF_GPIO_PIN_MAP(1,15)
+ 
+
+uint32_t app_uart_put(uint8_t byte)
