@@ -15,9 +15,42 @@
 
 
 
+=========================================
+
+00 00 80 0B 01 00 03 00 02 04 93 94    //17
+00 00 82 0B 01 00 03 00 02 04 92 8C    //16
+
+C0 00 
+
+==========================PC=====Transmitter===Receiver===默认收发数据========================
+
+
+-----------Transmitter-----------
+
+//默认参数： single，17通道， 0db， LE 1Mbps， PRVS9, 37Bytes, No timeout
+
+start test： 00 00 80 0B 01 00 03 00 02 04 93 94 
+返回： 00 00 00 00 00 00 00 00 00 00 00 00 
+
+end test:  C0 00       //end，默认end command                //同core手册 
+返回：  80 00           //返回report，收到的数据包为0          //同core手册 
+
+
+-----------Receiver-----------
+
+//默认参数：  single，17通道 ， LE 1Mbps，  No timeout
+
+start test：  00 00 80 0B 01 00 03 00 02 04 53 94 
+返回：  00 00 00 00 00 00 00 00 00 00 00 00 
+
+end test:    C0 00      //end，默认end command                //同core手册 
+返回：   80 00           //返回report，收到的数据包为0          //同core手册 
+
+
+
 ==========================PC=====Transmitter==收发数据===========================
 
-参数： single，16通道， 2db， LE 1Mbps， PRVS9, 35Bytes, No timeout
+手改参数： single，16通道， 2db， LE 1Mbps， PRVS9, 35Bytes, No timeout
 
 start test： 00 00 82 0B 01 00 03 00 02 04 92 8C 
 返回：  00 00 00 00 00 00 00 00 00 00 00 00 
@@ -50,7 +83,7 @@ start test： 00 00 82 0B 01 00 03 00 02 04 92 8C
 
 ==========================PC=====Receiver==收发数据===========================
 
-参数：  single，16通道 ， LE 1Mbps，  No timeout
+手改参数：  single，16通道 ， LE 1Mbps，  No timeout
 
 start test：  00 00 82 0B 01 00 03 00 02 04 52 8C 
 返回：  00 00 00 00 00 00 00 00 00 00 00 00 
@@ -74,7 +107,7 @@ start test：  00 00 82 0B 01 00 03 00 02 04 52 8C
 
 ===================================================================
 
-C:\workspace-test\ommo_nrf\nRF5_SDK_17.1.0_ddde560\components\boards\pca10112.h
+C:\workspace-test\ommo_nrf\nRF5_SDK_17.1.0_ddde560\components\boards\pca10112.h    //引脚定义
 
 说明： 主要摘录于下面的direct_test_mode例子
 
