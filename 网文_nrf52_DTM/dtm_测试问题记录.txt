@@ -1,4 +1,12 @@
 
+0. 在ses的v8.14中编译官网dtm例程，出现下面的错误提示
+      Linking 'direct_test_mode_pca10112.elf'
+        .text section is larger than specified size
+        .rodata section is larger than specified size
+        Build failed, exit status 0x1
+答： 要换成sesV5.42版本来开发
+
+ 
 1. 但用外接的串口工具连电脑， 虽然pc软件可以找到串口，但运行时经常出现错误提示，偶尔才可以正常运行
 分析：evk用自带的串口接口，pc软件可正常运行
 答： 主要是外接串口工具的中间连接线接触不良，换优质连接线后，可以很稳定的正常运行
