@@ -22,6 +22,71 @@
 
 C0 00 
 
+
+-------------
+
+20 C0 80 00 80 00 80 00 80 00 80 00 
+30 C0 
+
+20 C0 20 C0 20 C0 20 C0 20 C0 20 C0 
+A0 E0 
+
+===================================================================
+
+C:\workspace-test\ommo_nrf\nRF5_SDK_17.1.0_ddde560\components\boards\pca10112.h    //引脚定义 
+                                                                                                                                      //通过找CTS_PIN_NUMBER定义可看到
+
+说明： 主要摘录于下面的direct_test_mode例子
+
+\examples\dtm\direct_test_mode
+\components\ble\ble_dtm
+
+
+arm_startup_nrf52.s 
+system_nrf52.c
+
+dtm_init
+main.c 
+
+DTM - Direct Test Mode -- dtm_cmd 
+     TEST SETUP (called RESET in Bluetooth 4.0)
+     RECEIVER_TEST
+    TRANSMITTER_TEST
+    TEST_END 
+
+polled dtm_event_get 
+    PACKET_REPORTING_EVENT    
+    TEST_STATUS_EVENT [SUCCESS|FAIL]
+
+\examples\bsp\board.h    //pin 8 for RX and pin 6 for TX
+
+uart_init()
+          RX_PIN_NUMBER,   //p0.8 
+          TX_PIN_NUMBER,   //p0.6
+
+
+#define RX_PIN_NUMBER  NRF_GPIO_PIN_MAP(0,8)
+#define TX_PIN_NUMBER  NRF_GPIO_PIN_MAP(0,6)
+#define CTS_PIN_NUMBER NRF_GPIO_PIN_MAP(0,7)
+#define RTS_PIN_NUMBER NRF_GPIO_PIN_MAP(0,5)
+#define HWFC           true
+
+#define NRF21540_RXEN_PIN   NRF_GPIO_PIN_MAP(0,19)
+#define NRF21540_TXEN_PIN   NRF_GPIO_PIN_MAP(0,22)
+#define NRF21540_PDN_PIN    NRF_GPIO_PIN_MAP(0,23)
+#define NRF21540_MODE_PIN   NRF_GPIO_PIN_MAP(0,17)
+#define NRF21540_ANTSEL_PIN NRF_GPIO_PIN_MAP(0,20)
+#define NRF21540_CS_PIN     NRF_GPIO_PIN_MAP(0,21)
+#define NRF21540_MOSI_PIN   NRF_GPIO_PIN_MAP(1,13)
+#define NRF21540_MISO_PIN   NRF_GPIO_PIN_MAP(1,14)
+#define NRF21540_CLK_PIN    NRF_GPIO_PIN_MAP(1,15)
+ 
+
+uint32_t app_uart_put(uint8_t byte)
+
+==============================
+
+
 ==========================PC=====Transmitter===Receiver===默认收发数据========================
 
 
@@ -103,56 +168,3 @@ start test：  00 00 82 0B 01 00 03 00 02 04 52 8C
 
 
 
-
-
-===================================================================
-
-C:\workspace-test\ommo_nrf\nRF5_SDK_17.1.0_ddde560\components\boards\pca10112.h    //引脚定义
-
-说明： 主要摘录于下面的direct_test_mode例子
-
-\examples\dtm\direct_test_mode
-\components\ble\ble_dtm
-
-
-arm_startup_nrf52.s 
-system_nrf52.c
-
-dtm_init
-main.c 
-
-DTM - Direct Test Mode -- dtm_cmd 
-     TEST SETUP (called RESET in Bluetooth 4.0)
-     RECEIVER_TEST
-    TRANSMITTER_TEST
-    TEST_END 
-
-polled dtm_event_get 
-    PACKET_REPORTING_EVENT    
-    TEST_STATUS_EVENT [SUCCESS|FAIL]
-
-\examples\bsp\board.h    //pin 8 for RX and pin 6 for TX
-
-uart_init()
-          RX_PIN_NUMBER,   //p0.8 
-          TX_PIN_NUMBER,   //p0.6
-
-
-#define RX_PIN_NUMBER  NRF_GPIO_PIN_MAP(0,8)
-#define TX_PIN_NUMBER  NRF_GPIO_PIN_MAP(0,6)
-#define CTS_PIN_NUMBER NRF_GPIO_PIN_MAP(0,7)
-#define RTS_PIN_NUMBER NRF_GPIO_PIN_MAP(0,5)
-#define HWFC           true
-
-#define NRF21540_RXEN_PIN   NRF_GPIO_PIN_MAP(0,19)
-#define NRF21540_TXEN_PIN   NRF_GPIO_PIN_MAP(0,22)
-#define NRF21540_PDN_PIN    NRF_GPIO_PIN_MAP(0,23)
-#define NRF21540_MODE_PIN   NRF_GPIO_PIN_MAP(0,17)
-#define NRF21540_ANTSEL_PIN NRF_GPIO_PIN_MAP(0,20)
-#define NRF21540_CS_PIN     NRF_GPIO_PIN_MAP(0,21)
-#define NRF21540_MOSI_PIN   NRF_GPIO_PIN_MAP(1,13)
-#define NRF21540_MISO_PIN   NRF_GPIO_PIN_MAP(1,14)
-#define NRF21540_CLK_PIN    NRF_GPIO_PIN_MAP(1,15)
- 
-
-uint32_t app_uart_put(uint8_t byte)
