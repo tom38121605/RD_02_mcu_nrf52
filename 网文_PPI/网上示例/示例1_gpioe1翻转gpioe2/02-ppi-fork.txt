@@ -1,0 +1,65 @@
+#include <stdbool.h>
+#include "nrf.h"
+#include "nrf_drv_gpiote.h"
+#include "app_error.h"
+#include "boards.h"
+
+
+#include "nrf_drv_ppi.h"
+
+nrf_ppi_channel_t my_ppi_channel;
+
+
+/**
+ * 初始GPIO端口，设置 PIN_IN 为输入管教, PIN_OUT 为输出管脚,
+ */
+static void gpiote_init(void)
+{
+	nrf_gpio_cfg_input(BUTTON_1,NRF_GPIO_PIN_PULLUP);//设置管脚位上拉输入
+	
+	//配置一个GPIOTE输入任务
+	NRF_GPIOTE->CONFIG[0] =  
+					(GPIOTE_CONFIG_POLARITY_HiToLo << GPIOTE_CONFIG_POLARITY_Pos)//绑定通道0
+						| (BUTTON_1<< GPIOTE_CONFIG_PSEL_Pos)  // 配置事件输入
+						| (GPIOTE_CONFIG_MODE_Event << GPIOTE_CONFIG_MODE_Pos);//设置实际模式
+	
+	//配置一个GPIOTE输出						 
+	NRF_GPIOTE->CONFIG[1] =  
+					(GPIOTE_CONFIG_POLARITY_Toggle << GPIOTE_CONFIG_POLARITY_Pos)//绑定通道1
+						| (LED_1 << GPIOTE_CONFIG_PSEL_Pos) // 配置任务输出状态
+						| (GPIOTE_CONFIG_MODE_Task << GPIOTE_CONFIG_MODE_Pos);//任务模式
+
+	//配置一个GPIOTE输出作为分支端	
+    NRF_GPIOTE->CONFIG[2] =  
+					(GPIOTE_CONFIG_POLARITY_Toggle << GPIOTE_CONFIG_POLARITY_Pos)//绑定通道2
+						| (LED_2 << GPIOTE_CONFIG_PSEL_Pos) // 配置任务输出状态
+						| (GPIOTE_CONFIG_MODE_Task << GPIOTE_CONFIG_MODE_Pos);//任务模式
+
+}
+
+void ppi_init(void)
+{
+
+    // 配置PPI一端接输入事件0，一端接输出任务1
+    NRF_PPI->CH[0].EEP = (uint32_t)(&NRF_GPIOTE->EVENTS_IN[0]);
+    NRF_PPI->CH[0].TEP = (uint32_t)(&NRF_GPIOTE->TASKS_OUT[1]);
+	//输出端接通道0的fork分支端
+    NRF_PPI->FORK[0].TEP= (uint32_t)(&NRF_GPIOTE->TASKS_OUT[2]); 
+    // 使能通道0
+    NRF_PPI->CHEN = (PPI_CHEN_CH0_Enabled << PPI_CHEN_CH0_Pos);
+
+
+}
+/**
+ * 主函数，配置PPI的通道
+
+ */
+int main(void)
+{    
+	gpiote_init();
+    ppi_init();
+    while (true)
+    {
+        // Do nothing.
+    }
+}

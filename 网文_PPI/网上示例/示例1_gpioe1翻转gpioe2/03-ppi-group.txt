@@ -1,0 +1,98 @@
+/*
+ 把该例子程序编译后下载到 nrf52832 开发板内。默认 PPI group 组是关闭的，此时按下按 键 1 或者按键 2，LED1 灯或者 LED2 灯不会发生变化。如果按下按键 3，使能了 PPI group 组，此 时再按下按键 1，可以使得 LED1 灯进行翻转；按下按键 2，可以使得 LED2 灯进行翻转。我们如果 想关闭 PPI group 组，按下按键 4 则可以实现。
+*/
+
+
+#include <stdbool.h>
+#include "nrf.h"
+#include "nrf_drv_gpiote.h"
+#include "app_error.h"
+#include "led.h"
+#include "key.h"
+
+#include "nrf_drv_ppi.h"
+
+
+
+nrf_ppi_channel_t my_ppi_channel;
+
+
+/**
+ * 初始GPIO端口，设置 PIN_IN 为输入管教, PIN_OUT 为输出管脚,
+ */
+static void gpiote_init(void)
+{
+	nrf_gpio_cfg_input(KEY_1,NRF_GPIO_PIN_PULLUP);//设置管脚位上拉输入
+	nrf_gpio_cfg_input(KEY_2,NRF_GPIO_PIN_PULLUP);//设置管脚位上拉输入
+
+	//任务输入1，KEY1
+	NRF_GPIOTE->CONFIG[0] =  
+					(GPIOTE_CONFIG_POLARITY_HiToLo << GPIOTE_CONFIG_POLARITY_Pos)//绑定GPIOTE通道0
+						| (KEY_1  << GPIOTE_CONFIG_PSEL_Pos)  // 配置任务输入状态
+						| (GPIOTE_CONFIG_MODE_Event << GPIOTE_CONFIG_MODE_Pos);//事件模式	
+	//任务输出1，LED0
+    NRF_GPIOTE->CONFIG[1] =  
+					(GPIOTE_CONFIG_POLARITY_Toggle << GPIOTE_CONFIG_POLARITY_Pos)//绑定GPIOTE通道1
+						| (LED_0 << GPIOTE_CONFIG_PSEL_Pos) // 配置任务输出状态
+						| (GPIOTE_CONFIG_MODE_Task << GPIOTE_CONFIG_MODE_Pos);//任务模式
+		
+	//任务输入2，KEY2
+	NRF_GPIOTE->CONFIG[2] =  
+					(GPIOTE_CONFIG_POLARITY_HiToLo << GPIOTE_CONFIG_POLARITY_Pos)//绑定GPIOTE通道2
+						| (KEY_2  << GPIOTE_CONFIG_PSEL_Pos)   // 配置任务输入状态
+						| (GPIOTE_CONFIG_MODE_Event << GPIOTE_CONFIG_MODE_Pos);//事件模式
+	//任务输出2，LED1
+    NRF_GPIOTE->CONFIG[3] =  
+					(GPIOTE_CONFIG_POLARITY_Toggle << GPIOTE_CONFIG_POLARITY_Pos)//绑定GPIOTE通道3
+						| (LED_1<< GPIOTE_CONFIG_PSEL_Pos) // 配置任务输出状态
+						| (GPIOTE_CONFIG_MODE_Task << GPIOTE_CONFIG_MODE_Pos);//任务模式
+}
+
+void ppi_init(void)
+{
+	// 配置PPI通道0，一端接GPIOTE事件0，一端接GPIOTE任务1
+	NRF_PPI->CH[0].EEP = (uint32_t)(&NRF_GPIOTE->EVENTS_IN[0]);
+	NRF_PPI->CH[0].TEP = (uint32_t)(&NRF_GPIOTE->TASKS_OUT[1]);
+
+	// 配置PPI通道1，一端接GPIOTE事件2，一端接GPIOTE任务3
+	NRF_PPI->CH[1].EEP = (uint32_t)(&NRF_GPIOTE->EVENTS_IN[2]);
+	NRF_PPI->CH[1].TEP = (uint32_t)(&NRF_GPIOTE->TASKS_OUT[3]);
+	
+	//把通道0和通道1 绑定到PPI group0之上
+	NRF_PPI->CHG[0]=0x03;
+}
+
+
+/**
+ * 主函数，配置PPI的通道
+ */
+int main(void)
+{    
+	gpiote_init();
+    ppi_init();
+	KEY_Init();
+	LED_Init();
+	LED3_Close();
+	LED4_Close();
+    
+	while (true)
+    {
+		//判定按键是否按下
+        if( KEY3_Down()== 0)
+		{
+			LED4_Close();
+			NRF_PPI->TASKS_CHG[0].EN = 1;//使能PPI group0
+			LED3_Toggle();
+		} 
+		
+		//判定按键是否按下
+		if( KEY4_Down()== 0)
+		{ 
+			LED3_Close();
+			NRF_PPI->TASKS_CHG[0].DIS = 1;//关闭PPI group0
+			LED4_Toggle();
+		}
+	}
+			
+}
+
