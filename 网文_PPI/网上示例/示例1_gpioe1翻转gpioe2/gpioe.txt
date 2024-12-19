@@ -1,0 +1,56 @@
+#include <stdbool.h>
+#include "nrf.h"
+#include "nrf_drv_gpiote.h"
+#include "app_error.h"
+#include "boards.h"
+
+
+#include "nrf_drv_ppi.h"
+
+
+nrf_ppi_channel_t my_ppi_channel;
+
+
+/**
+ * 初始GPIO端口，设置 PIN_IN 为输入管教, PIN_OUT 为输出管脚,
+ */
+static void gpiote_init(void)
+{
+	 nrf_gpio_cfg_input(BSP_BUTTON_0,NRF_GPIO_PIN_PULLUP);//设置管脚位上拉输入
+
+    NRF_GPIOTE->CONFIG[0] =  
+                    (GPIOTE_CONFIG_POLARITY_HiToLo << GPIOTE_CONFIG_POLARITY_Pos)//绑定GPIOTE通道0
+                    | (BSP_BUTTON_0<< GPIOTE_CONFIG_PSEL_Pos)  // 配置输入事件状态 
+                    | (GPIOTE_CONFIG_MODE_Event << GPIOTE_CONFIG_MODE_Pos);//事件模式
+
+    NRF_GPIOTE->CONFIG[1] =  
+                    (GPIOTE_CONFIG_POLARITY_Toggle << GPIOTE_CONFIG_POLARITY_Pos)//绑定GPIOTE通道1
+                    | (BSP_LED_0 << GPIOTE_CONFIG_PSEL_Pos) // 配置任务输出状态
+                    | (GPIOTE_CONFIG_MODE_Task << GPIOTE_CONFIG_MODE_Pos);//任务模式			
+}
+
+void ppi_init(void)
+{
+    // 配置PPI的端口，通道0一端接按键任务，另外一端接输出事件
+    NRF_PPI->CH[0].EEP = (uint32_t)(&NRF_GPIOTE->EVENTS_IN[0]);//事件
+    NRF_PPI->CH[0].TEP = (uint32_t)(&NRF_GPIOTE->TASKS_OUT[1]);//任务
+ 
+    // 使能PPI的通道0
+    NRF_PPI->CHEN = (PPI_CHEN_CH0_Enabled << PPI_CHEN_CH0_Pos);//使能第0通道
+}
+/**
+ * 主函数，配置PPI的通道
+ */
+int main(void)
+{    
+    gpiote_init();
+    ppi_init();
+    while (true)
+    {
+        // 循环等待
+    }
+}
+
+
+把该例子程序编译后下载到 nrf52832 开发板内。按下按键 1 后，触发 GPIOTE 事件，事件通过 PPI 触发 GPIOTE 任务，可以使得 LED1 灯进行翻转。
+
