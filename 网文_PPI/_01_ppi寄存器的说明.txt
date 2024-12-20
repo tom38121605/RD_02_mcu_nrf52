@@ -1,0 +1,45 @@
+
+
+一共有9个寄存器;
+
+CH.EEP:   连接PPI输入事件
+CH.TEP:   连接PPI输出任务
+
+CHEN:       开启/关闭PPI通道
+CHENSET:  开启PPI通道
+CHENCLR:  关闭PPI通道
+
+FORK.TEP:  连接PPI第二输出任务
+
+CHGn:                    把PPI通道，绑定到通道组GROUPn，最多可绑定32个PPI通道
+TASKS_CHGn.EN:    打开 通道组GROUPn
+TASKS_CHGn.DIS:   关闭 通道组GROUPn
+
+
+
+================参考===常用事件和任务========================
+
+TIMER:
+
+   EVENTS_COMPARE   -- 比较事件
+
+   TASKS_CAPTURE      -- 捕获任务
+   TASKS_START          -- START任务
+   TASKS_STOP           -- STOP任务
+
+GPIOE:
+
+   EVENTS_IN         -- 可以是下降沿，上升沿 等
+   TASKS_OUT        -- 可以输出toggle，高电平，低电平
+
+
+UARTE:
+
+   EVENT_ENDRX
+
+
+
+
+
+
+
