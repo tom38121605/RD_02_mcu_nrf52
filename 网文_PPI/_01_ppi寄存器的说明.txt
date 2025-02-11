@@ -2,18 +2,19 @@
 
 一共有9个寄存器;
 
-CH.EEP:   连接PPI输入事件
-CH.TEP:   连接PPI输出任务
+CHn.EEP:   连接PPI输入事件   --easy
+CHn.TEP:   连接PPI输出任务   --easy
 
-CHEN:       开启/关闭PPI通道
-CHENSET:  开启PPI通道
-CHENCLR:  关闭PPI通道
+CHEN:       开启/关闭PPI通道，例如CHEN.0 = 1, 是使能PPI0通道；  如CHEN.0 = 0, 是关闭PPI0通道
+CHENSET:  开启PPI通道，  例如CHENSET.0 = 1, 是使能PPI0通道
+CHENCLR:  关闭PPI通道， 例如CHENCLR.0 = 1, 是关闭PPI0通道
 
-FORK.TEP:  连接PPI第二输出任务
+FORKn.TEP:  连接PPI第二输出任务   --easy
 
-CHGn:                    把PPI通道，绑定到通道组GROUPn，最多可绑定32个PPI通道
-TASKS_CHGn.EN:    打开 通道组GROUPn
-TASKS_CHGn.DIS:   关闭 通道组GROUPn
+CHGn:        把PPI通道，绑定到通道组GROUPn，最多可绑定32个PPI通道。例如CHG0.2-0=111, 表示把PPI通道0，1，2绑定到PPI通道组0
+
+TASKS_CHGn.EN:    打开 通道组GROUPn， 例如 CHG0.EN = 1, 表示打开PPI通道组0
+TASKS_CHGn.DIS:   关闭 通道组GROUPn， 例如 CHG0.DIS = 1, 表示关闭PPI通道组0
 
 
 

@@ -18,7 +18,7 @@ nrf_ppi_channel_t my_ppi_channel;
 
 
 /**
- * 初始GPIO端口，设置 PIN_IN 为输入管教, PIN_OUT 为输出管脚,
+ * 初始GPIO端口，设置 PIN_IN 为输入管脚, PIN_OUT 为输出管脚,
  */
 static void gpiote_init(void)
 {
